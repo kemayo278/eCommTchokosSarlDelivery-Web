@@ -1,6 +1,6 @@
 # Tchokos Livreur — Espace livreur
 
-Application **Next.js 15 (App Router) · React 19 · TypeScript · Tailwind v4** pour les livreurs de **Tchokos Sarl Delivery**.
+**Tchokos Sarl Delivery**.
 
 Charte : `--primary: #10b981` · `--secondary: #0f172a`.
 
@@ -24,8 +24,6 @@ npm run build && npm start
 | E-mail       | `livreur@tchokos.cm`  |
 | Mot de passe | `tchokos`             |
 
-(Ou utilisez le bouton « Remplir les identifiants de démonstration ».)
-
 ## Écrans
 
 - **/login** — authentification du livreur (2 colonnes sur grand écran, plein écran sur mobile).
@@ -44,35 +42,3 @@ Navigation : **barre basse** (5 onglets) sur mobile, **barre latérale** sur des
 ## Statuts de livraison
 
 `en_attente` → le livreur appuie sur « Accepter » → `en_cours` (livraison acceptée / en cours) → le **client scanne le QR code** → `livree`.
-
-## Architecture
-
-```
-src/
-├── app/
-│   ├── layout.tsx            # police + AuthProvider
-│   ├── page.tsx              # redirection selon la session
-│   ├── login/page.tsx
-│   └── (app)/                # zone protégée (garde d'auth)
-│       ├── layout.tsx        # AppShell
-│       ├── dashboard/
-│       ├── livraisons/ + [id]/   # QR de validation via qrcode.react
-│       ├── notifications/
-│       ├── profil/ + modifier/
-│       └── parametres/ + mot-de-passe/ + aide/
-├── components/               # AppShell, BottomNav, DesktopSidebar, OrderCard, StatusBadge
-└── lib/
-    ├── auth.tsx              # contexte d'auth (mock localStorage)
-    ├── data.ts               # données de démonstration + helpers
-    └── types.ts
-```
-
-## Brancher votre backend Laravel
-
-L'auth et les données sont mockées pour la démo. Points d'intégration :
-
-1. **`src/lib/auth.tsx`** — remplacer `connexion()` par un `POST /auth/login` et la restauration de session par un `GET /me` (token en cookie httpOnly de préférence).
-2. **`src/lib/data.ts`** — remplacer les tableaux statiques par des appels à votre API Laravel (`GET /livraisons`, `GET /livraisons/{id}`), idéalement via des Server Components ou React Query.
-3. **Détail livraison** — l'action de progression du statut (`accepter → démarrer → confirmer`) doit envoyer un `PATCH /livraisons/{id}/statut`.
-
-Le frontend reste ainsi totalement découplé de la logique métier (même approche que ton découplage front / Laravel sur Braiderlocs).
